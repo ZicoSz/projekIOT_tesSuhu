@@ -7,6 +7,7 @@
 #define DHTPIN D6
 #define DHTTYPE DHT11
 #define BUZZER_PIN D7
+#define LED_PIN D5
 
 const char* ssid = "Xiaomi 14T Pro";
 const char* password = "behkasusmen";
@@ -66,6 +67,9 @@ void setup() {
 
   pinMode(BUZZER_PIN, OUTPUT);
   digitalWrite(BUZZER_PIN, LOW);
+
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, LOW);
 
 }
 
@@ -165,11 +169,12 @@ void loop(){
         lcd.setCursor(0,1);
         lcd.print("START");
 
-        if(suhu >= 30){
-          delay(200);
+        if(suhu >= 35){
 
+          digitalWrite(LED_PIN, HIGH);
+          
           if(mute=="0"){
-
+            
             digitalWrite(BUZZER_PIN, HIGH);
 
           }else{
@@ -177,9 +182,29 @@ void loop(){
             digitalWrite(BUZZER_PIN, LOW);
 
           }
+        }
+        else if (suhu >= 30){
+            
+          digitalWrite(LED_PIN, HIGH);
 
-        }else{
+          if(mute=="0"){
+              
+            // Beep... Beep...
+            digitalWrite(BUZZER_PIN, HIGH);
+            delay(200);
+            digitalWrite(BUZZER_PIN, LOW);
+            delay(300);
+            
+          }else{
+            digitalWrite(BUZZER_PIN,LOW);
 
+          }
+        }
+        
+        
+        else{
+          
+          digitalWrite(LED_PIN, LOW);  
           digitalWrite(BUZZER_PIN, LOW);
 
           // Reset mute otomatis
@@ -236,6 +261,7 @@ void loop(){
       else{
 
         digitalWrite(BUZZER_PIN, LOW);
+        digitalWrite(LED_PIN, LOW);
 
         lcd.setCursor(0,1);
         lcd.print("STOP");
@@ -266,6 +292,7 @@ void loop(){
     Serial.println("WiFi Terputus");
 
     digitalWrite(BUZZER_PIN, LOW);
+    digitalWrite(LED_PIN, LOW);
 
     lcd.clear();
     lcd.setCursor(0,0);
